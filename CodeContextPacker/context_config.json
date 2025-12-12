@@ -1,0 +1,43 @@
+{
+  "global_ignore": ["node_modules", ".git", "__pycache__", ".DS_Store","generated"],
+  
+  "tasks": {
+    "default": {
+      "description": "默认任务",
+      "project_root": "../",
+      "output_file": "context_default.md",
+      "paths": ["backend-server/src/api"],
+      "extensions": [".py"]
+    },
+
+    "paper_chapter3": {
+      "description": "第三章论文代码",
+      "project_root": "../../pythonCode/Icpn",
+      "output_file": "chapter3_code.md",
+      "paths": [
+        "Chapter3_Static_FewShot",
+        "utils/new_pcap_processor.py"
+      ],
+      "extensions": [".py"]
+    },
+
+    "my-website": {
+      "description": "我的网页项目",
+      "project_root": "../../fullStackCode/my-fullstack-app",
+      "output_file": "my-website.md",
+      "paths": [
+        "content",
+        "prisma",
+        "scripts",
+        "src",
+        "package.json"
+      ],
+      "extensions": [
+        ".prisma",
+        ".ts",
+        ".tsx",
+        ".css"
+    ]
+    }
+  }
+}
