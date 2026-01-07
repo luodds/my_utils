@@ -1,0 +1,99 @@
+{
+  "global_ignore": ["node_modules", 
+                    ".git", 
+                    "__pycache__", 
+                    ".DS_Store",
+                    "generated",
+                    "__init__.py",
+                    ".next",
+                    "baselines",
+                    ".venv"],
+
+  "tasks": {
+    "default": {
+      "description": "默认任务",
+      "project_root": "../",
+      "output_file": "output/context_default.md",
+      "paths": ["backend-server/src/api"],
+      "extensions": [".py"]
+    },
+
+    "paper_chapter3": {
+      "description": "第三章论文代码",
+      "project_root": "../../pythonCode/Icpn",
+      "output_file": "chapter3_code.md",
+      "paths": [
+        "Chapter3_Static_FewShot",
+        "utils/new_pcap_processor.py"
+      ],
+      "extensions": [".py"]
+    },
+
+    "paper_chapter3-1": {
+      "description": "第三章论文代码",
+      "project_root": "../../pythonCode/Icpn",
+      "output_file": "chapter3_code.md",
+      "paths": [
+        "Chapter3_Static_FewShot",
+        "utils/preprocess_etbert.py"
+      ],
+      "extensions": [".py"]
+    },
+
+    "paper_chapter3-2": {
+      "description": "第三章论文代码",
+      "project_root": "../../pythonCode/Icpn",
+      "output_file": "chapter3_code.md",
+      "paths": [
+        "utils/preprocess_etbert_style.py"
+      ],
+      "extensions": [".py"]
+    },
+
+    "my-website": {
+      "description": "我的网页项目",
+      "project_root": "../../pythonCode/my-website",
+      "output_file": "my-website.md",
+      "paths": [
+        "backend",
+        "frontend"
+      ],
+      "extensions": [
+        ".ts",
+        ".tsx",
+        ".css",
+        ".py"
+    ]
+    },
+
+    "my-full-stack": {
+      "description": "我的网页项目",
+      "project_root": "../../pythonCode/my-full-stack",
+      "output_file": "my-full-stack.md",
+      "paths": [
+        
+      ],
+      "extensions": [
+        
+    ]
+    },
+
+    "MC-1DCNN-GTCN": {
+      "description": "MC-1DCNN-GTCN",
+      "project_root": "../../pythonCode/MC_1DCNN_GTCN",
+      "output_file": "MC-1DCNN-GTCN.md",
+      "paths": [
+        "."
+      ],
+      "extensions": [".py"]
+    },
+
+    "my_utils": {
+      "description": "当前工具集项目",
+      "project_root": "../",
+      "output_file": "output/1-my_utils_context.md",
+      "paths": ["."],
+      "extensions": [".py"]
+    }
+  }
+}

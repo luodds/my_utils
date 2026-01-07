@@ -1,2 +1,54 @@
-.vscode
-*.md
+# ===========================
+# 1. 核心系统与 IDE 配置
+# ===========================
+.vscode/
+.idea/
+.DS_Store
+*.swp
+
+# ===========================
+# 2. Python 环境与缓存 (通用)
+# ===========================
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+venv/
+env/
+pip-log.txt
+*.log
+
+# ===========================
+# 3. 核心：项目输出目录
+# ===========================
+# 使用双星号忽略所有子目录下的 output 文件夹
+# 这会同时处理 1-CodePacker, 2-ScholarResearch, 3-DocConverter 下的 output
+**/output/
+
+# ===========================
+# 4. 模块特定忽略规则
+# ===========================
+
+# [2-ScholarResearch] 爬虫浏览器用户数据 (包含大量缓存和Cookies，必须忽略)
+user_data_browser/
+2-ScholarResearch/user_data_browser/
+
+# [3-DocConverter] 转换结果 docx (防止误提交)
+*.docx
+
+# [3-DocConverter] 输入文件 (如果你不想把 PDF 传到仓库，取消下面这行的注释)
+# 3-DocConverter/input/*.pdf
+
+# [5-Resources] 大体积文本资源/小说
+5-Resources/
+
+# ===========================
+# 5. 其他生成文件
+# ===========================
+# 忽略 Excel 报表
+*.xlsx
+# 忽略打包生成的 markdown (防止污染 diff)，但保留根目录可能的 README.md
+1-CodePacker/output/*.md
+
+# 忽略临时数据文件 (保留配置 json)
+*_data.json

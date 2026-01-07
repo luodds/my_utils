@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>第4章框架图-修复版</title>
+    <script type="module">
+        import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+        // 设置 loose 模式以允许 HTML 标签
+        mermaid.initialize({ startOnLoad: true, securityLevel: 'loose', theme: 'neutral' });
+    </script>
+    <style>
+        body { font-family: sans-serif; text-align: center; padding: 20px; }
+        .mermaid { margin: 0 auto; max-width: 800px; }
+    </style>
+</head>
+<body>
+
+    <h3>图 4-1 基于特征生成重放的增量小样本威胁检测方法总体框架</h3>
+
+    <pre class="mermaid">
+    graph TD
+        %% 定义样式
+        classDef inputClass fill:#f4f4f4,stroke:#333,stroke-width:1px,stroke-dasharray: 5 5;
+        classDef frozenClass fill:#e3f2fd,stroke:#1565c0,stroke-width:2px;
+        classDef trainClass fill:#fff3e0,stroke:#ef6c00,stroke-width:2px;
+        classDef processClass fill:#fff,stroke:#333,stroke-width:1px;
+
+        %% --- 输入阶段 ---
+        subgraph InputStage [输入阶段 / Input Stage]
+            direction TB
+            NodeA["新任务小样本数据<br>New Few-Shot Samples"]:::inputClass
+            NodeB["旧任务类别标签<br>Old Class Labels"]:::inputClass
+            NodeC["高斯噪声<br>Gaussian Noise"]:::inputClass
+        end
+
+        %% --- 特征提取 ---
+        subgraph FeatureExt [特征提取模块 / Feature Extraction]
+            NodeD["ET-BERT 增强骨干网络<br>SupConResNetET<br>(参数冻结 / Frozen)"]:::frozenClass
+        end
+
+        %% --- 生成式重放 ---
+        subgraph GenReplay [生成式重放模块 / Generative Replay]
+            NodeE["条件扩散概率模型<br>Conditional Diffusion Model<br>(Teacher / Memory)"]:::trainClass
+            NodeF["反向去噪生成<br>Reverse Denoising"]:::processClass
+        end
+
+        %% --- 增量分类 ---
+        subgraph IncLearn [增量分类模块 / Incremental Classifier]
+            NodeG["新类真实特征<br>Real New Features"]:::processClass
+            NodeH["旧类伪特征<br>Pseudo Old Features"]:::processClass
+            NodeI{"特征混合策略<br>Feature Replay & Mixing"}:::processClass
+            NodeJ["增量分类器<br>Incremental Classifier<br>(Student / Solver)"]:::trainClass
+            NodeK["威胁检测结果<br>Detection Output"]:::processClass
+        end
+
+        %% --- 连线 ---
+        NodeA --> NodeD
+        NodeD -->|"提取特征"| NodeG
+        
+        NodeB -->|"条件控制"| NodeE
+        NodeC --> NodeE
+        NodeE --> NodeF
+        NodeF -->|"生成"| NodeH
+        
+        NodeG --> NodeI
+        NodeH --> NodeI
+        NodeI -->|"混合特征集"| NodeJ
+        NodeJ -->|"更新参数"| NodeJ
+        NodeJ --> NodeK
+    </pre>
+
+    <div style="margin-top:20px; font-size:12px; color:grey;">
+        注：蓝色模块表示参数冻结，橙色模块表示包含可训练或可调用参数，虚线框表示数据输入。
+    </div>
+
+</body>
+</html>

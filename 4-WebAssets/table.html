@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>消融实验对比表</title>
+    <style>
+        body {
+            font-family: "Microsoft YaHei", "SimHei", sans-serif;
+            background-color: #f0f2f5; 
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 50px;
+        }
+
+        .slide-container {
+            width: 1200px;
+            background-color: white;
+            padding: 40px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            margin-bottom: 50px;
+        }
+
+        h2 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 16px; 
+            line-height: 1.5;
+        }
+
+        th, td {
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            vertical-align: middle;
+        }
+
+        /* ==== 风格 A: 学术论文风 ==== */
+        .style-academic th {
+            background-color: #f2f2f2;
+            color: #000;
+            font-weight: bold;
+            border-bottom: 2px solid #000;
+            border-top: 2px solid #000;
+            text-align: center;
+        }
+        .style-academic td {
+            border-left: none;
+            border-right: none;
+            border-bottom: 1px solid #ddd;
+            color: #333;
+            text-align: center;
+        }
+        .style-academic tr:last-child td {
+            border-bottom: 2px solid #000;
+        }
+        .style-academic td:last-child {
+            text-align: left; 
+            font-size: 15px;
+        }
+
+        /* ==== 风格 B: 现代PPT风 ==== */
+        .style-ppt th {
+            background-color: #4472C4;
+            color: white;
+            font-weight: bold;
+            text-align: center;
+            border: 1px solid #4472C4;
+        }
+        .style-ppt td {
+            border: 1px solid #cdd4ea;
+            text-align: center;
+        }
+        .style-ppt tr:nth-child(even) {
+            background-color: #e9eff7;
+        }
+        .style-ppt td:last-child {
+            text-align: left;
+            font-size: 15px;
+        }
+
+        /* 强调样式 */
+        .highlight-green { color: #28a745; font-weight: bold; }
+        .highlight-blue { color: #4472C4; font-weight: bold; }
+        .exp-id { font-weight: 900; font-size: 16px; }
+        
+        /* 逻辑描述中的关键词加粗 */
+        .logic-tag {
+            font-weight: bold;
+            color: #d9534f; /* 红色强调标题 */
+        }
+
+    </style>
+</head>
+<body>
+
+    <!-- 风格 A：学术论文风 -->
+    <div class="slide-container">
+        <h2>风格 A：学术论文标准样式（已更新逻辑）</h2>
+        <table class="style-academic">
+            <thead>
+                <tr>
+                    <th width="10%">实验<br>编号</th>
+                    <th width="15%">骨干网络<br>架构</th>
+                    <th width="12%">预训练<br>损失函数</th>
+                    <th width="12%">小样本<br>微调策略</th>
+                    <th width="8%">参数量</th>
+                    <th width="8%">5-Shot<br>准确率</th>
+                    <th>实验目的与对比逻辑</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="exp-id">ResNet</td>
+                    <td>ResNet-18<br>(标准版)</td>
+                    <td>交叉熵损失<br>(CE)</td>
+                    <td>全量微调<br>(Full FT)</td>
+                    <td>~11.2 M</td>
+                    <td>85.66</td>
+                    <td><span class="logic-tag">基准对照：</span>结果表明在仅有 5 个样本的情况下，传统的“全量微调”容易导致过拟合，性能受限。</td>
+                </tr>
+                <tr>
+                    <td class="exp-id">ResNet+ET</td>
+                    <td>ResNet-ET<br>(改进版)</td>
+                    <td>交叉熵损失<br>(CE)</td>
+                    <td>全量微调<br>(Full FT)</td>
+                    <td>~11.3 M</td>
+                    <td>85.93</td>
+                    <td><span class="logic-tag">架构验证：</span>对比 M1。引入 CoordConv 和 CBAM 后性能微涨 (+0.27%)，证明了流量时空特征的有效性，但受限于 CE 损失，提升幅度有限。</td>
+                </tr>
+                <tr>
+                    <td class="exp-id">SupCon+ET</td>
+                    <td>ResNet-ET<br>(改进版)</td>
+                    <td>监督对比学习<br>(SupCon)</td>
+                    <td>全量微调<br>(Full FT)</td>
+                    <td>~11.3 M</td>
+                    <td>86.79</td>
+                    <td><span class="logic-tag">预训练验证 (存在遗忘)：</span>对比 M2。引入 SupCon 提升了特征质量 (+0.86%)。但全量微调导致了<b>“灾难性遗忘”</b>，破坏了预训练的高质量特征。</td>
+                </tr>
+                <tr>
+                    <td class="exp-id">SupCon+Linear</td>
+                    <td>ResNet-ET<br>(改进版)</td>
+                    <td>监督对比学习<br>(SupCon)</td>
+                    <td>线性探测<br>(Linear)</td>
+                    <td>< 0.1 M</td>
+                    <td>91.22</td>
+                    <td><span class="logic-tag">微调策略 (冻结优势)：</span>对比 M3。<b>性能大幅跃升 (+4.43%)</b>。证明在极小样本下，<b>冻结骨干</b>能有效保留 SupCon 学习到的类间可分性，远优于全量微调。</td>
+                </tr>
+                <tr>
+                    <td class="exp-id">SupCon+VPT</td>
+                    <td><b>ResNet-ET<br>(改进版)</b></td>
+                    <td><b>监督对比学习<br>(SupCon)</b></td>
+                    <td><b>提示微调<br>(VPT)</b></td>
+                    <td class="highlight-green">< 0.5 M</td>
+                    <td class="highlight-green">93.69</td>
+                    <td><span class="logic-tag">最终方案：</span>对比 M4。<b>性能进一步提升 (+2.47%)</b>。证明 VPT 在保留骨干特征（不遗忘）的同时，通过可学习的 Prompt 弥补了线性探测适应性不足的问题。</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- 风格 B：现代 PPT 风 -->
+    <div class="slide-container">
+        <h2>风格 B：现代 PPT 商务样式（已更新逻辑）</h2>
+        <table class="style-ppt">
+            <thead>
+                <tr>
+                    <th width="10%">实验<br>编号</th>
+                    <th width="15%">骨干网络<br>架构</th>
+                    <th width="12%">预训练<br>损失函数</th>
+                    <th width="12%">小样本<br>微调策略</th>
+                    <th width="8%">参数量</th>
+                    <th width="8%">5-Shot<br>准确率</th>
+                    <th>实验目的与对比逻辑</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="exp-id">ResNet</td>
+                    <td>ResNet-18<br>(标准版)</td>
+                    <td>交叉熵损失<br>(CE)</td>
+                    <td>全量微调<br>(Full FT)</td>
+                    <td>~11.2 M</td>
+                    <td>85.66</td>
+                    <td><span class="logic-tag">基准对照：</span>结果表明在仅有 5 个样本的情况下，传统的“全量微调”容易导致过拟合，性能受限。</td>
+                </tr>
+                <tr>
+                    <td class="exp-id">ResNet+ET</td>
+                    <td>ResNet-ET<br>(改进版)</td>
+                    <td>交叉熵损失<br>(CE)</td>
+                    <td>全量微调<br>(Full FT)</td>
+                    <td>~11.3 M</td>
+                    <td>85.93</td>
+                    <td><span class="logic-tag">架构验证：</span>对比 M1。引入 CoordConv 和 CBAM 后性能微涨 (+0.27%)，证明了流量时空特征的有效性，但受限于 CE 损失，提升幅度有限。</td>
+                </tr>
+                <tr>
+                    <td class="exp-id">SupCon+ET</td>
+                    <td>ResNet-ET<br>(改进版)</td>
+                    <td>监督对比学习<br>(SupCon)</td>
+                    <td>全量微调<br>(Full FT)</td>
+                    <td>~11.3 M</td>
+                    <td>86.79</td>
+                    <td><span class="logic-tag">预训练验证 (存在遗忘)：</span>对比 M2。引入 SupCon 提升了特征质量 (+0.86%)。但全量微调导致了<b>“灾难性遗忘”</b>，破坏了预训练的高质量特征。</td>
+                </tr>
+                <tr>
+                    <td class="exp-id">SupCon+Linear</td>
+                    <td>ResNet-ET<br>(改进版)</td>
+                    <td>监督对比学习<br>(SupCon)</td>
+                    <td>线性探测<br>(Linear)</td>
+                    <td>< 0.1 M</td>
+                    <td class="highlight-blue">91.22</td>
+                    <td><span class="logic-tag">微调策略 (冻结优势)：</span>对比 M3。<b>性能大幅跃升 (+4.43%)</b>。证明在极小样本下，<b>冻结骨干</b>能有效保留 SupCon 学习到的类间可分性，远优于全量微调。</td>
+                </tr>
+                <tr>
+                    <td class="exp-id">SupCon+VPT</td>
+                    <td><b>ResNet-ET<br>(改进版)</b></td>
+                    <td><b>监督对比学习<br>(SupCon)</b></td>
+                    <td><b>提示微调<br>(VPT)</b></td>
+                    <td class="highlight-green">< 0.5 M</td>
+                    <td class="highlight-green">93.69</td>
+                    <td><span class="logic-tag">最终方案 (最优适配)：</span>对比 M4。<b>性能进一步提升 (+2.47%)</b>。证明 VPT 在保留骨干特征（不遗忘）的同时，通过可学习的 Prompt 弥补了线性探测适应性不足的问题。</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+</body>
+</html>
