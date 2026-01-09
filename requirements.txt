@@ -1,0 +1,10 @@
+# === 2-ScholarResearch (学术爬虫与分析) ===
+playwright
+pandas
+openpyxl
+deep-translator
+matplotlib
+tqdm
+
+# === 3-DocConverter (PDF转Word) ===
+pdf2docx
